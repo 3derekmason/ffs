@@ -1,4 +1,5 @@
 <script>
+import axios from "axios";
 export default {
   name: "App",
   data: () => ({
@@ -6,13 +7,25 @@ export default {
     newFile: "",
   }),
   methods: {
-    sendFile(e) {
-      e.preventDefault();
-      console.log(this.newFile);
-    },
     editFile(e) {
       e.preventDefault();
-      this.newFile = e.target.files[0];
+      const files = e.target.files;
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(files[0]);
+      this.newFile = files[0];
+    },
+    sendfile(e) {
+      e.preventDefault();
+      let formData = new FormData();
+      formData.append("file", this.newFile);
+      axios
+        .post("http://localhost:5000/files", formData)
+        .then((response) => {
+          response.data.success
+            ? alert("File successfully uploaded")
+            : alert("File already exists");
+        })
+        .catch((err) => alert("Error: " + err));
     },
   },
 };
@@ -25,11 +38,11 @@ export default {
 
   <main>
     <h1>Upload Image</h1>
-    <form @submit="sendFile">
+    <form enctype="multipart/form-data" @submit="sendFile">
       <input
         type="file"
         name="newFile"
-        accept="image/*, .md"
+        accept="image/*, .md, .pdf"
         @change="editFile"
       />
       <button type="submit">UPLOAD</button>
