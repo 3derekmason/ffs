@@ -1,4 +1,22 @@
-<script setup></script>
+<script>
+export default {
+  name: "App",
+  data: () => ({
+    files: [],
+    newFile: "",
+  }),
+  methods: {
+    sendFile(e) {
+      e.preventDefault();
+      console.log(this.newFile);
+    },
+    editFile(e) {
+      e.preventDefault();
+      this.newFile = e.target.files[0];
+    },
+  },
+};
+</script>
 
 <template>
   <header>
@@ -7,8 +25,13 @@
 
   <main>
     <h1>Upload Image</h1>
-    <form>
-      <input type="file" name="newFile" accept="image/*, .md" />
+    <form @submit="sendFile">
+      <input
+        type="file"
+        name="newFile"
+        accept="image/*, .md"
+        @change="editFile"
+      />
       <button type="submit">UPLOAD</button>
     </form>
   </main>
