@@ -15,7 +15,6 @@ export default {
       this.newFile = files[0];
     },
     submitFile() {
-      console.log("hi");
       let formData = new FormData();
 
       formData.append("file", this.newFile);
@@ -43,16 +42,43 @@ export default {
   </header>
 
   <main>
-    <h1>Upload Image</h1>
+    <h2>Upload File</h2>
 
-    <input
-      type="file"
-      name="newFile"
-      accept="image/*, .md, .pdf"
-      @change="editFile"
-    />
-    <button v-on:click="submitFile">UPLOAD</button>
+    <input type="file" name="newFile" accept=" .md, .pdf" @change="editFile" />
+    <button v-on:click="submitFile">SUBMIT</button>
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+h2 {
+  color: #55ffdd;
+}
+
+input {
+  border: 1px solid #11cc99;
+  margin-right: 32px;
+  padding: 4px;
+  border-radius: 4px;
+}
+button {
+  border-radius: 4px;
+  border: none;
+  background: #44ffcc;
+  color: #212121;
+  letter-spacing: 2px;
+  font-size: 18px;
+  width: 100px;
+  height: 40px;
+  box-shadow: 0px 4px 0px #11cc99;
+  transition: 0.2s;
+}
+button:hover {
+  background: #55ffdd;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:active {
+  box-shadow: none;
+  transform: translateY(4px);
+}
+</style>
