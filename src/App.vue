@@ -18,14 +18,19 @@ export default {
       e.preventDefault();
       let formData = new FormData();
       formData.append("file", this.newFile);
+      console.log(this.newFile);
       axios
-        .post("http://localhost:5000/files", formData)
-        .then((response) => {
-          response.data.success
-            ? alert("File successfully uploaded")
-            : alert("File already exists");
+        .post("http://localhost:5000/api/files", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         })
-        .catch((err) => alert("Error: " + err));
+        .then(function () {
+          console.log("SUCCESS!!");
+        })
+        .catch(function () {
+          console.log("FAILURE!!");
+        });
     },
   },
 };
