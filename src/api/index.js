@@ -3,32 +3,25 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import fs from "fs";
-import dotenv from "dotenv";
 
 import upload from "./storage.js";
 import newFile from "./db.js";
-
-dotenv.config();
 
 //CREATE EXPRESS APP
 const app = express();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 5000;
-
 var corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
-
 app.use(cors(corsOptions));
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//ROUTES WILL GO HERE
+//ROUTES
 app.get("/api", (req, res) => {
   res.json({ message: "WELCOME" });
 });
-
 app.post("/api/upload", upload.single("file"), (req, res) => {
   var file = fs.readFileSync(req.file.path);
 
@@ -50,6 +43,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   });
 });
 
+// npm start
 app.listen(PORT, () =>
   console.log(`Server running at http://localhost:${PORT}`)
 );
