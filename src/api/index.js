@@ -2,8 +2,11 @@
 import express from "express";
 import multer from "multer";
 import cors from "cors";
-// import mongodb from "mongodb";
-// import fs from "fs";
+import dotenv from "dotenv";
+
+dotenv.config();
+import mongodb from "mongodb";
+import fs from "fs";
 
 const PORT = 5000;
 
@@ -18,18 +21,18 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 // DATABASE CONNECTION
-// const MongoClient = mongodb.MongoClient;
-// const myurl = import.meta.env.MONGODB_URI;
+const MongoClient = mongodb.MongoClient;
+// eslint-disable-next-line no-undef
+const myurl = process.env.MONGODB_URI;
+let db;
 
-// let db;
-
-// MongoClient.connect(myurl, (err, client) => {
-//   if (err) return console.log(err);
-//   db = client.db("forfssake");
-//   app.listen(3000, () => {
-//     console.log("Database connected successfully");
-//   });
-// });
+MongoClient.connect(myurl, (err, client) => {
+  if (err) return console.log(err);
+  db = client.db("forfssake");
+  app.listen(3000, () => {
+    console.log("Database connected successfully");
+  });
+});
 
 // SET STORAGE
 var storage = multer.diskStorage({
