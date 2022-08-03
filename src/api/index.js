@@ -2,18 +2,16 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import mongoose from "mongoose";
 import fs from "fs";
 import dotenv from "dotenv";
 
 import upload from "./storage.js";
+import newFile from "./db.js";
 
 dotenv.config();
 
 //CREATE EXPRESS APP
 const app = express();
-// eslint-disable-next-line no-undef
-const myurl = process.env.MONGODB_URI;
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 5000;
 
@@ -25,14 +23,6 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// DATABASE CONNECTION
-mongoose.connect(myurl);
-//File Schema
-const fileSchema = mongoose.Schema({
-  file: { data: "Buffer", contentType: String },
-});
-const newFile = mongoose.model("file", fileSchema);
 
 //ROUTES WILL GO HERE
 app.get("/api", (req, res) => {
