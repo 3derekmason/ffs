@@ -7,6 +7,9 @@ export default {
     newFile: "",
   }),
   methods: {
+    reset() {
+      this.newFile = "";
+    },
     editFile(e) {
       e.preventDefault();
       const files = e.target.files;
@@ -28,9 +31,10 @@ export default {
         .then(function () {
           console.log("SUCCESS!!");
         })
-        .catch(function () {
-          console.log("FAILURE!!");
+        .catch((err) => {
+          console.log(err);
         });
+      this.reset();
     },
   },
 };
