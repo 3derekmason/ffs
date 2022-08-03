@@ -14,13 +14,14 @@ export default {
       fileReader.readAsDataURL(files[0]);
       this.newFile = files[0];
     },
-    sendfile(e) {
-      e.preventDefault();
+    submitFile() {
+      console.log("hi");
       let formData = new FormData();
+
       formData.append("file", this.newFile);
-      console.log(this.newFile);
+
       axios
-        .post("http://localhost:5000/api/files", formData, {
+        .post("http://localhost:5000/api/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -43,15 +44,14 @@ export default {
 
   <main>
     <h1>Upload Image</h1>
-    <form enctype="multipart/form-data" @submit="sendFile">
-      <input
-        type="file"
-        name="newFile"
-        accept="image/*, .md, .pdf"
-        @change="editFile"
-      />
-      <button type="submit">UPLOAD</button>
-    </form>
+
+    <input
+      type="file"
+      name="newFile"
+      accept="image/*, .md, .pdf"
+      @change="editFile"
+    />
+    <button v-on:click="submitFile">UPLOAD</button>
   </main>
 </template>
 
