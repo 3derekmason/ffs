@@ -1,11 +1,12 @@
 // require the installed packages
 import express from "express";
 import bodyParser from "body-parser";
-import multer from "multer";
 import cors from "cors";
 import mongoose from "mongoose";
 import fs from "fs";
 import dotenv from "dotenv";
+
+import upload from "./storage.js";
 
 dotenv.config();
 
@@ -32,18 +33,6 @@ const fileSchema = mongoose.Schema({
   file: { data: "Buffer", contentType: String },
 });
 const newFile = mongoose.model("file", fileSchema);
-
-// SET STORAGE
-var storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + file.originalname);
-  },
-});
-
-var upload = multer({ storage: storage });
 
 //ROUTES WILL GO HERE
 app.get("/api", (req, res) => {
