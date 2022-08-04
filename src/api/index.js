@@ -11,16 +11,22 @@ import newFile from "./db.js";
 const app = express();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 5000;
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "*",
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  })
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //ROUTES
-app.get("/api", (req, res) => {
-  res.json({ message: "WELCOME" });
+app.get("/api", async (req, res) => {
+  try {
+    const fileArray = await newFile.find({});
+    res.status(200).send(fileArray);
+  } catch (err) {
+    console.error(err);
+  }
 });
 app.post("/api/upload", upload.single("file"), (req, res) => {
   var file = fs.readFileSync(req.file.path);

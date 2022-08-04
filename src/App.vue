@@ -6,6 +6,9 @@ export default {
     files: [],
     newFile: "",
   }),
+  mounted() {
+    this.getFiles();
+  },
   methods: {
     reset() {
       this.newFile = "";
@@ -16,6 +19,9 @@ export default {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(files[0]);
       this.newFile = files[0];
+    },
+    getFiles() {
+      axios.get("http://localhost:5000/api/").then((res) => console.log(res));
     },
     submitFile() {
       let formData = new FormData();
