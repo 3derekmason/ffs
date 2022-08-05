@@ -1,206 +1,42 @@
 # Oh for `fs` sake...
 
-### Overview
+## Overview
 
-## PART I: Upload file locally:
-
-##### /src/api/index.js
-
-```js
-// require the installed packages
-import express from "express";
-import multer from "multer";
-import cors from "cors";
-
-const PORT = 5000;
-
-//CREATE EXPRESS APP
-const app = express();
-
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-
-app.use(cors(corsOptions));
-
-// SET STORAGE
-var storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + Date.now());
-  },
-});
-
-var upload = multer({ storage: storage });
-
-//ROUTES
-app.get("/api", (req, res) => {
-  res.json({ message: "WELCOME" });
-});
-
-app.post("/api/upload", upload.single("file"), (req, res, next) => {
-  const file = req.file;
-  console.log(file);
-  if (!file) {
-    const error = new Error("Please upload a file");
-    error.httpStatusCode = 400;
-    return next(error);
-  }
-  res.send(file);
-});
-
-app.listen(PORT, () =>
-  console.log(`Server running at http://localhost:${PORT}`)
-);
-```
+This is a practice project made with the end goal of posting a `.md` file to a Mongo database, and then fetch that document and display as `html` on the front end.
 
 <br>
 
-##### /src/App.vue
+Topics covered include:
 
-```js
-<script>
-import axios from "axios";
-export default {
-  name: "App",
-  data: () => ({
-    files: [],
-    newFile: "",
-  }),
-  methods: {
-    editFile(e) {
-      e.preventDefault();
-      const files = e.target.files;
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(files[0]);
-      this.newFile = files[0];
-    },
-    submitFile() {
-      console.log("hi");
-      let formData = new FormData();
+- Local disc storage with [Multer](https://www.npmjs.com/package/multer)
+- Save large files in MongoDB as Buffers with [Mongoose](https://www.npmjs.com/package/mongoose)
+- Using Node `fs` to read files and parse back to a markdown string
+- Use [ShowdownJS](https://github.com/showdownjs) to convert markdown string into html string and display template in app.
 
-      formData.append("file", this.newFile);
+### Stack
 
-      axios
-        .post("http://localhost:5000/api/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then(function () {
-          console.log("SUCCESS!!");
-        })
-        .catch(function () {
-          console.log("FAILURE!!");
-        });
-    },
-  },
-};
-</script>
+<br>
 
-<template>
-  <header>
-    <h1>Oh for <code>fs</code> sake...</h1>
-  </header>
+#### **Vue**
 
-  <main>
-    <h1>Upload Image</h1>
+I decided to use Vue for this app because I find the templating and styling incredibly intuitional to use. It's easy to mock up a few components just to test what I was trying to accomplish on the back end.
 
-    <input
-      type="file"
-      name="newFile"
-      accept="image/*, .md, .pdf"
-      @change="editFile"
-    />
-    <button v-on:click="submitFile">UPLOAD</button>
-  </main>
-</template>
+#### **MongoDB**
 
-<style scoped></style>
-```
+Mongo has been my first database choice since the first time I tried it. I also used [Mongo Atlas](https://www.mongodb.com/atlas/database), as I have found it an incredibly easy platform to view and transform test data, as well as set up environment variables in my app.
 
-<hr>
+#### **Express / Multer**
 
-## PART II: Save file to MongoDB with `mongoose`
+Multer is used for handling `mulitipart/form-data` in requests to the server. It adds a 'body' and 'file' or 'files' object to the request object you send to Express.
 
-##### /src/api/index.js
+#### **ShowdownJS**
 
-```js
-// require the installed packages
-import express from "express";
-import bodyParser from "body-parser";
-import multer from "multer";
-import cors from "cors";
-import mongoose from "mongoose";
-import fs from "fs";
-import dotenv from "dotenv";
+Showdown is a very cool bidirectional `markdown` to `html` converter. For the purposes of this project I only convert one way, md --> html. The server returns a markdown string of the requested file, and on the front end we display the file as html by converting with Showdown and implementing the `v-html` template syntax in Vue.
 
-dotenv.config();
+<br>
 
-//CREATE EXPRESS APP
-const app = express();
-const myurl = process.env.MONGODB_URI;
-const PORT = process.env.PORT || 5000;
+### Pain Points
 
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+When beginning this project I assumed the crux of the app would be showing a file as html in my app. However, Showdown made this incredibly easy once I was able to return a markdown string to my front end.
 
-app.use(cors(corsOptions));
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// DATABASE CONNECTION
-mongoose.connect(myurl);
-//File Schema
-const fileSchema = mongoose.Schema({
-  file: { data: "Buffer", contentType: String },
-});
-const newFile = mongoose.model("file", fileSchema);
-
-// SET STORAGE
-var storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + file.originalname);
-  },
-});
-
-var upload = multer({ storage: storage });
-
-//ROUTES WILL GO HERE
-app.get("/api", (req, res) => {
-  res.json({ message: "WELCOME" });
-});
-
-app.post("/api/upload", upload.single("file"), (req, res) => {
-  var file = fs.readFileSync(req.file.path);
-
-  var encode_file = file.toString("base64");
-  var final_file = {
-    contentType: req.file.mimetype,
-    file: encode_file.toString("base64"),
-  };
-  console.log(final_file);
-  newFile.create(final_file, function (err, result) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(result);
-      console.log("Saved To database");
-      res.contentType(final_file.contentType);
-      res.send(final_file);
-    }
-  });
-});
-
-app.listen(PORT, () =>
-  console.log(`Server running at http://localhost:${PORT}`)
-);
-```
+Instead I would say that the most difficult problem I ran into was parsing the both the data stored in my database, and the uploads that Multer stored to disk storage. In order to fetch the correct file and read, parse, and send the data I needed, it took a good amount of playing with Node's `fs.XXXX()` function, hence the name of this project, for fs sake!
