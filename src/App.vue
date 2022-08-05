@@ -1,7 +1,7 @@
 <script>
 import axios from "axios";
 import showdown from "showdown";
-
+import DisplayFile from "./components/DisplayFile.vue";
 const converter = new showdown.Converter();
 export default {
   name: "App",
@@ -10,6 +10,9 @@ export default {
     newFile: "",
     displayFile: "",
   }),
+  components: {
+    DisplayFile,
+  },
   mounted() {
     this.getFiles();
   },
@@ -71,7 +74,7 @@ export default {
       />
       <button v-on:click="submitFile">SUBMIT</button>
     </div>
-    {{ displayFile }}
+    <DisplayFile :file="{ displayFile }" />
   </main>
 </template>
 
