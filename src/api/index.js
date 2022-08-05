@@ -22,8 +22,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //ROUTES
 app.get("/api", async (req, res) => {
   try {
-    const fileArray = await newFile.find({});
-    res.status(200).send(fileArray);
+    fs.readdir("./uploads/", (err, docs) => {
+      if (err) console.log(err);
+      else {
+        docs.forEach((file) => {
+          fs.readFile(`./uploads/${file}`, "utf-8", (err, data) => {
+            res.status(200).send(data);
+          });
+        });
+      }
+    });
   } catch (err) {
     console.error(err);
   }
