@@ -11,8 +11,10 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@types/showdown": "^2.0.0",
     "axios": "^0.27.2",
     "buffer": "^6.0.3",
+    "showdown": "^2.1.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

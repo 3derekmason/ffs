@@ -1,10 +1,14 @@
 <script>
 import axios from "axios";
+import showdown from "showdown";
+
+const converter = new showdown.Converter();
 export default {
   name: "App",
   data: () => ({
     files: [],
     newFile: "",
+    displayFile: "",
   }),
   mounted() {
     this.getFiles();
@@ -21,7 +25,11 @@ export default {
       this.newFile = files[0];
     },
     getFiles() {
-      axios.get("http://localhost:5000/api/").then((res) => console.log(res));
+      axios.get("http://localhost:5000/api/").then((res) => {
+        const text = res.data;
+        const html = converter.makeHtml(text);
+        this.displayFile = html;
+      });
     },
     submitFile() {
       let formData = new FormData();
@@ -52,14 +60,33 @@ export default {
   </header>
 
   <main>
-    <h2>Upload File</h2>
+    <div class="row">
+      <h2>Upload File</h2>
 
-    <input type="file" name="newFile" accept=" .md, .pdf" @change="editFile" />
-    <button v-on:click="submitFile">SUBMIT</button>
+      <input
+        type="file"
+        name="newFile"
+        accept=" .md, .pdf"
+        @change="editFile"
+      />
+      <button v-on:click="submitFile">SUBMIT</button>
+    </div>
+    {{ displayFile }}
   </main>
 </template>
 
 <style scoped>
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
 h2 {
   color: #55ffdd;
 }

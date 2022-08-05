@@ -25,10 +25,8 @@ app.get("/api", async (req, res) => {
     fs.readdir("./uploads/", (err, docs) => {
       if (err) console.log(err);
       else {
-        docs.forEach((file) => {
-          fs.readFile(`./uploads/${file}`, "utf-8", (err, data) => {
-            res.status(200).send(data);
-          });
+        fs.readFile(`./uploads/${docs[1]}`, "utf-8", (err, data) => {
+          res.status(200).send(data);
         });
       }
     });
