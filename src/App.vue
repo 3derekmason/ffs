@@ -58,12 +58,11 @@ export default {
 </script>
 
 <template>
-  <header>
-    <h1>Oh for <code>fs</code> sake...</h1>
-  </header>
-
   <main>
     <div class="row">
+      <header>
+        <h1>Oh for <code>fs</code> sake...</h1>
+      </header>
       <h2>Upload File</h2>
 
       <input
@@ -82,6 +81,8 @@ export default {
 main {
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  width: 100vw;
 }
 
 .row {
@@ -89,6 +90,7 @@ main {
   justify-content: center;
   align-items: center;
   gap: 16px;
+  margin: 40px;
 }
 h2 {
   color: #55ffdd;

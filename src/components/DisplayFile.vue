@@ -9,3 +9,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+div {
+  overflow: auto;
+}
+</style>
