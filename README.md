@@ -1,5 +1,7 @@
 # Oh for `fs` sake...
 
+<img src='./public/submit.png' alt="Upload and submit">
+
 ## Overview
 
 This is a practice project made with the end goal of posting a `.md` file to a Mongo database, and then fetch that document and display as `html` on the front end.
@@ -12,6 +14,12 @@ Topics covered include:
 - Save large files in MongoDB as Buffers with [Mongoose](https://www.npmjs.com/package/mongoose)
 - Using Node `fs` to read files and parse back to a markdown string
 - Use [ShowdownJS](https://github.com/showdownjs) to convert markdown string into html string and display template in app.
+
+<br>
+
+<img src="./public/display.png">
+
+<br>
 
 ### Stack
 
@@ -40,3 +48,5 @@ Showdown is a very cool bidirectional `markdown` to `html` converter. For the pu
 When beginning this project I assumed the crux of the app would be showing a file as html in my app. However, Showdown made this incredibly easy once I was able to return a markdown string to my front end.
 
 Instead I would say that the most difficult problem I ran into was parsing the both the data stored in my database, and the uploads that Multer stored to disk storage. In order to fetch the correct file and read, parse, and send the data I needed, it took a good amount of playing with Node's `fs.XXXX()` function, hence the name of this project, for fs sake!
+
+<br>
