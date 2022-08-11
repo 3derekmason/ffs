@@ -42,7 +42,6 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
     contentType: req.file.mimetype,
     file: encode_file.toString("base64"),
   };
-  console.log(final_file);
   newFile.create(final_file, function (err, result) {
     if (err) {
       console.log(err);
